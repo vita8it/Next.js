@@ -2534,12 +2534,6 @@ NewModule("TweenManager", function()
 end)
 
 NewModule("BodyVelocity", function()
-    local Connectors = Packages.Connectors
-
-    local Character = Player.Character or Player.CharacterAdded:Wait()
-    local Humanoid = Character and Character:WaitForChild('Humanoid', 10)
-    local HumanoidRootPart = Character and Character:WaitForChild('HumanoidRootPart', 10)
-
     local BodyVelocity = Instance.new("BodyVelocity") do
         BodyVelocity.Velocity = Vector3.zero
         BodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
@@ -2588,7 +2582,7 @@ NewModule("BodyVelocity", function()
     end
 
     Connect(Player.CharacterAdded, NewCharacter)
-    task.spawn(NewCharacter, Character)
+    task.spawn(NewCharacter, Player.Character)
 
     local function NoClipOnStepped(Character)
         if _ENV.OnFarm then
@@ -2600,14 +2594,6 @@ NewModule("BodyVelocity", function()
                 CanCollideObjects[i].CanCollide = true
             end
         end
-    end
-
-    local function IsAlive()
-        if not Character then return end
-        if not Humanoid then return end
-        if not HumanoidRootPart then return end
-
-        return (Humanoid and Humanoid.Health > 0) or HumanoidRootPart ~= nil
     end
 
     local function UpdateVelocityOnStepped(Character)
@@ -2637,16 +2623,10 @@ NewModule("BodyVelocity", function()
     end
 
     Connect(RenderStepped, function()
-        if IsAlive() then
-            UpdateVelocityOnStepped(Character)
-            NoClipOnStepped(Character)
+        if Player.Character then
+            UpdateVelocityOnStepped(Player.Character)
+            NoClipOnStepped(Player.Character)
         end
-    end)
-
-    Connect(Player.CharacterAdded, function(v)
-        Character = v
-        Humanoid = v:WaitForChild("Humanoid", 10)
-        HumanoidRootPart = v:WaitForChild("HumanoidRootPart", 10)
     end)
 
     return BodyVelocity
