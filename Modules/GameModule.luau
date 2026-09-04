@@ -11,8 +11,8 @@ local Module, Cache = {}, {} do
     Cache.Bring = {}
 end
 
-local Connectors = Packages.Connectors
-local Connect = Connectors.Connect
+local Connections = Packages.Connections
+local Connect = Connections.Connect
 
 function Importer( ... )
     return Packages:Import( ...)
